@@ -1,0 +1,21 @@
+FROM node:lts-alpine
+
+WORKDIR /app
+
+# Enable pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Copy package files
+COPY package.json pnpm-lock.yaml .npmrc ./
+
+# Install dependencies
+RUN pnpm install
+
+# Copy the rest of the application source code
+COPY . .
+
+# Expose the development server port
+EXPOSE 3000
+
+# Start the development server with hot reloading enabled
+CMD ["pnpm", "run", "dev", "--host", "0.0.0.0"]
